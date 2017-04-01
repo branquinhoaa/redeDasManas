@@ -1,0 +1,27 @@
+machine:
+  ruby:
+    version: 2.3.0
+
+  pre:
+    - wget https://s3.amazonaws.com/circle-downloads/circleci-ruby2.3.0_0.0.1_amd64.deb
+    - sudo dpkg -i circleci-ruby2.3.0_0.0.1_amd64.deb
+
+dependencies:
+  pre:
+    - gem install bundler
+
+test:
+  post:
+    - bundle exec rubocop
+    - mkdir $CIRCLE_ARTIFACTS/tests
+    - "if test -d tmp/capybara; then cp -r tmp/capybara $CIRCLE_ARTIFACTS/tests/; fi"
+
+deployment:
+  dev:
+    branch: /^(?!(master|homolog|develop|qa)).*/
+    commands:
+      - heroku maintenance:on --app rdm-dev
+      - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
+      - git push -f git@heroku.com:rdm-dev.git $CIRCLE_SHA1:refs/heads/master
+      - heroku run rake db:migrate --app rdm-dev
+      - heroku maintenance:off --app rdm-dev
