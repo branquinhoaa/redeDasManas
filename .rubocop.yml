@@ -1,0 +1,13 @@
+Metrics/LineLength:
+  Max: 130
+AllCops:
+  Include:
+    - Rakefile
+    - config.ru
+    - lib/**/*.rake
+  Exclude:
+    - db/schema.rb
+Rails:
+  Enabled: true
+Style/Documentation:
+  Enabled: false
