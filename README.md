@@ -1,5 +1,7 @@
 # README
 
+This is my project to help woman finding good job opportunities.
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
